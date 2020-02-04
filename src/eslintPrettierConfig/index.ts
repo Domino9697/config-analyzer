@@ -1,5 +1,6 @@
 import { Linter } from 'eslint';
 import { ESLintPrettierPlugins, ESLintPrettierWarningRules, ESLintPrettierErrorRules } from './rules';
+import { Message, MessageType } from '../types';
 
 export function parseRawExtendElement(rawPlugin: string): string {
   return rawPlugin
@@ -10,23 +11,15 @@ export function parseRawExtendElement(rawPlugin: string): string {
 
 type extendsObject = { [index: string]: PluginData };
 
-enum MessageType {
-  INFO,
-  WARN,
-  ERROR
-}
-
-interface Message {
-  message: string;
-  type: MessageType;
-}
-
 interface PluginData {
   position: number;
   prettierPosition: number;
   rawName: string;
 }
 
+/**
+ * Transforms the ESLint extends array in a more parsable extends object
+ */
 export function mapExtendsArray(extendsArray: string[]): extendsObject {
   return extendsArray.reduce<extendsObject>((_extendsObject, rawElement, index) => {
     let element = parseRawExtendElement(rawElement);
@@ -65,7 +58,11 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
   }, {});
 }
 
-export function applyExtendsArrayOrderRule(extendsObject: extendsObject): null | Message[] {
+/**
+ * Check if Prettier plugins are available and not installed and if they are extended in the right order
+ * of the extends object
+ */
+export function applyExtendsArrayOrderRule(extendsObject: extendsObject): Message[] {
   return Object.keys(extendsObject).reduce<Message[]>((errorMessages, pluginKey) => {
     const { position, prettierPosition, rawName } = extendsObject[pluginKey];
 
@@ -89,55 +86,60 @@ export function applyExtendsArrayOrderRule(extendsObject: extendsObject): null |
   }, []);
 }
 
+/**
+ * Check if the overrides object contains rules that override the warning and error rules of
+ * prettier plugins contained in the extendsObject
+ */
 export function applyNoFormattingOverrideRule(
   extendsObject: extendsObject,
-  overrides: Partial<Linter.RulesRecord>
-): null | Message[] {
-  if (!overrides) {
-    return null;
-  }
-
+  overrides: Partial<Linter.RulesRecord>,
+  warningRules: { [index: string]: string[] | undefined },
+  errorRules: { [index: string]: string[] | undefined }
+): Message[] {
   return Object.keys(extendsObject)
     .filter(pluginKey => extendsObject[pluginKey].prettierPosition !== -1)
     .reduce<Message[]>((messages, pluginKey) => {
       // Check if there are config overrides that are disabled by one of the Prettier plugins
-      const warningRules = Object.keys(overrides)
-        .filter(ruleOverride => ESLintPrettierWarningRules[pluginKey]?.includes(ruleOverride))
+      const warningRulesMessages = Object.keys(overrides)
+        .filter(ruleOverride => warningRules[pluginKey]?.includes(ruleOverride))
         .map(rule => ({
           message: `${rule} is overriden in your ESlint config but was disabled by the prettier ${pluginKey}`,
           type: MessageType.WARN
         }));
 
-      const errorRules = Object.keys(overrides)
-        .filter(ruleOverride => ESLintPrettierErrorRules[pluginKey]?.includes(ruleOverride))
+      const errorRulesMessages = Object.keys(overrides)
+        .filter(ruleOverride => errorRules[pluginKey]?.includes(ruleOverride))
         .map(rule => ({
           message: `${rule} is overriden in your ESlint config but was disabled by the prettier ${pluginKey}`,
           type: MessageType.ERROR
         }));
 
-      return messages.concat(warningRules, errorRules);
+      return messages.concat(warningRulesMessages, errorRulesMessages);
     }, []);
 }
 
-export function checkESLINTConfiguration(configuration: Linter.Config, usingPrettier: boolean) {
+export function checkESLINTConfiguration(configuration: Linter.Config, usingPrettier: boolean): Message[] {
+  const messages: Message[] = [];
+
   const extendsOption = configuration.extends;
   const ruleOverrides = configuration.rules;
 
   if (!extendsOption || typeof extendsOption === 'string' || !usingPrettier) {
-    return;
+    return messages;
   }
 
+  // Map the extends array to an object
   const extendsObject = mapExtendsArray(extendsOption);
 
-  const ESLintErrorMessages = applyExtendsArrayOrderRule(extendsObject);
-
-  console.log(ESLintErrorMessages);
+  // Check for errors in the extends array order
+  messages.concat(applyExtendsArrayOrderRule(extendsObject));
 
   if (!ruleOverrides) {
-    return;
+    return messages;
   }
 
-  const ESLintRuleOverrideErrors = applyNoFormattingOverrideRule(extendsObject, ruleOverrides);
+  // Check if there are rules that override a prettier plugin rule
+  messages.concat(applyNoFormattingOverrideRule(extendsObject, ruleOverrides));
 
-  console.log(ESLintRuleOverrideErrors);
+  return messages;
 }

@@ -1,4 +1,4 @@
-export const ESLintPrettierWarningRules: { [index: string]: string[] } = {
+export const ESLintPrettierWarningRules: { [index: string]: string[] | undefined } = {
   eslint: [
     'arrow-body-style',
     'curly',
@@ -13,7 +13,7 @@ export const ESLintPrettierWarningRules: { [index: string]: string[] } = {
   ]
 };
 
-export const ESLintPrettierErrorRules: { [index: string]: string[] } = {
+export const ESLintPrettierErrorRules: { [index: string]: string[] | undefined } = {
   eslint: [
     'array-bracket-newline',
     'array-bracket-spacing',
