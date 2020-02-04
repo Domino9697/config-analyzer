@@ -24,7 +24,6 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
 	  element = element.replace('prettier/', '');
   
 	  const plugin = _extendsObject[element];
-	  const rawName = isPrettierPlugin ? '' : rawElement;
   
 	  if (!plugin) {
 		return {
@@ -32,7 +31,8 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
 		  [element]: {
 			position: isPrettierPlugin ? -1 : index,
 			prettierPosition: isPrettierPlugin ? index : -1,
-			rawName
+			prettierPluginName: isPrettierPlugin ? rawElement : "",
+			pluginName: isPrettierPlugin ? "" : rawElement
 		  }
 		};
 	  }
@@ -42,7 +42,8 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
 		[element]: {
 		  position: isPrettierPlugin ? plugin.position : index,
 		  prettierPosition: isPrettierPlugin ? index : plugin.prettierPosition,
-		  rawName
+		  prettierPluginName: isPrettierPlugin ? rawElement : plugin.prettierPluginName,
+		  pluginName: isPrettierPlugin ? plugin.pluginName : rawElement
 		}
 	  };
 	}, {});

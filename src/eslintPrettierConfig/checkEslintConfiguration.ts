@@ -10,12 +10,12 @@ import { ESLintPrettierPlugins, ESLintPrettierWarningRules, ESLintPrettierErrorR
  */
 export function applyExtendsArrayOrderRule(extendsObject: extendsObject, plugins: string[]): Message[] {
 	return Object.keys(extendsObject).reduce<Message[]>((errorMessages, pluginKey) => {
-	  const { position, prettierPosition, rawName } = extendsObject[pluginKey];
+	  const { position, prettierPosition, pluginName, prettierPluginName } = extendsObject[pluginKey];
   
 	  // Prettier Plugin is before actual Plugin
 	  if (prettierPosition < position && prettierPosition !== -1) {
 		return errorMessages.concat({
-		  message: `${pluginKey} prettier plugin is called before the actual ${rawName} plugin in the ESLINT extends array`,
+		  message: `${pluginKey} prettier plugin is called before the actual ${pluginName} plugin in the ESLINT extends array`,
 		  type: MessageType.ERROR
 		});
 	  }
@@ -23,7 +23,7 @@ export function applyExtendsArrayOrderRule(extendsObject: extendsObject, plugins
 	  // Prettier Plugin is not installed
 	  if (plugins.some(el => pluginKey.includes(el)) && prettierPosition === -1) {
 		return errorMessages.concat({
-		  message: `The rules of the ESLint ${rawName} plugin may conflict with Prettier. Extend the prettier/${pluginKey} eslint configuration to disable them`,
+		  message: `The rules of the ESLint ${pluginName} plugin may conflict with Prettier. Extend the ${prettierPluginName} eslint configuration to disable them`,
 		  type: MessageType.ERROR
 		});
 	  }

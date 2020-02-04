@@ -1,7 +1,8 @@
 interface PluginData {
 	position: number;
 	prettierPosition: number;
-	rawName: string;
+	pluginName: string;
+	prettierPluginName: string
   }
 
 export type extendsObject = { [index: string]: PluginData };
