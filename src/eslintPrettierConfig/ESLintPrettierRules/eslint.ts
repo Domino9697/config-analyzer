@@ -1,4 +1,4 @@
-import { rulesObject } from "./types";
+import { rulesObject } from "../types";
 
 export const ESLintPrettierWarningRules: rulesObject = {
   eslint: [
@@ -90,14 +90,3 @@ export const ESLintPrettierErrorRules: rulesObject = {
     'yield-star-spacing'
   ]
 };
-
-export const ESLintPrettierPlugins = [
-  'eslint',
-  '@typescript-eslint',
-  'babel',
-  'flowtype',
-  'react',
-  'standard',
-  'unicorn',
-  'vue'
-];
