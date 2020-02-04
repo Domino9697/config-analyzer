@@ -1,5 +1,5 @@
 describe('ESLint Prettier Configuration', () => {
-  describe('checkESLintConfiguration', () => {
+  describe('applyExtendsArrayOrderRule', () => {
     it('should work', () => {});
   });
 });

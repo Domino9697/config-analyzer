@@ -66,7 +66,7 @@ export function applyExtendsArrayOrderRule(extendsObject: extendsObject, plugins
   
 
 export function checkESLINTConfiguration(configuration: Linter.Config, usingPrettier: boolean): Message[] {
-	const messages: Message[] = [];
+	let messages: Message[] = [];
   
 	const extendsOption = configuration.extends;
 	const ruleOverrides = configuration.rules;
@@ -79,14 +79,14 @@ export function checkESLINTConfiguration(configuration: Linter.Config, usingPret
 	const extendsObject = mapExtendsArray(extendsOption);
   
 	// Check for errors in the extends array order
-	messages.concat(applyExtendsArrayOrderRule(extendsObject, ESLintPrettierPlugins));
+	messages = messages.concat(applyExtendsArrayOrderRule(extendsObject, ESLintPrettierPlugins));
   
 	if (!ruleOverrides) {
 	  return messages;
 	}
   
 	// Check if there are rules that override a prettier plugin rule
-	messages.concat(applyNoFormattingOverrideRule(extendsObject, ruleOverrides, ESLintPrettierWarningRules, ESLintPrettierErrorRules));
+	messages = messages.concat(applyNoFormattingOverrideRule(extendsObject, ruleOverrides, ESLintPrettierWarningRules, ESLintPrettierErrorRules));
   
 	return messages;
   }

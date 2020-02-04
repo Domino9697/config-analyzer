@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { checkESLINTConfiguration } from "./eslintPrettierConfig";
 
-async function findAndCheckESLINTCOnfig(dirPath: string): Promise<void> {
+function findAndCheckESLINTCOnfig(dirPath: string): void {
   const filePath = path.join(dirPath, ".eslintrc");
 
   // Find eslintrc file
@@ -13,10 +13,10 @@ async function findAndCheckESLINTCOnfig(dirPath: string): Promise<void> {
 
   const rawConfig = readFileSync(filePath, 'utf8');
 
-  checkESLINTConfiguration(JSON.parse(rawConfig), true);
+  console.log(checkESLINTConfiguration(JSON.parse(rawConfig), true));
 }
 
-async function main(): Promise<void> {
+function main(): void {
   const args = process.argv.splice(2);
 
   if (args.length === 0) {
