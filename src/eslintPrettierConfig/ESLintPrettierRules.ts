@@ -1,4 +1,6 @@
-export const ESLintPrettierWarningRules: { [index: string]: string[] | undefined } = {
+import { rulesObject } from "./types";
+
+export const ESLintPrettierWarningRules: rulesObject = {
   eslint: [
     'arrow-body-style',
     'curly',
@@ -13,7 +15,7 @@ export const ESLintPrettierWarningRules: { [index: string]: string[] | undefined
   ]
 };
 
-export const ESLintPrettierErrorRules: { [index: string]: string[] | undefined } = {
+export const ESLintPrettierErrorRules: rulesObject = {
   eslint: [
     'array-bracket-newline',
     'array-bracket-spacing',
