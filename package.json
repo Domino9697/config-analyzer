@@ -1,0 +1,21 @@
+{
+  "name": "config-analyzer",
+  "version": "1.0.0",
+  "description": "A project and IDE config analyzer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "author": "Francois Hendriks",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/comment-json": "^1.1.1",
+    "@types/eslint": "^6.1.7",
+    "@types/node": "^13.7.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "comment-json": "^2.4.1"
+  }
+}
