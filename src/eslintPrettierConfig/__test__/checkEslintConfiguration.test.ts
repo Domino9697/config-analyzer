@@ -1,6 +1,6 @@
 import { applyExtendsArrayOrderRule, checkESLINTConfiguration } from '../checkEslintConfiguration';
 import { extendsObject } from '../types';
-import { MessageCategory } from '../../types';
+import { MessageCategory, MessageType } from '../../types';
 
 describe('ESLint Prettier Configuration', () => {
   describe('applyExtendsArrayOrderRule', () => {
@@ -68,11 +68,13 @@ describe('ESLint Prettier Configuration', () => {
 
   describe('checkEslintConfiguration', () => {
     it('should return an empty array if no plugins are present', () => {
-      expect(checkESLINTConfiguration({configuration: {}, usingPrettier: true})).toStrictEqual([]);
+      expect(checkESLINTConfiguration({ configuration: {}, usingPrettier: true })).toStrictEqual([]);
     });
 
     it('should return an empty array if a plugin is present but has no prettier equivalent', () => {
-      expect(checkESLINTConfiguration({configuration: { extends: ['plugin'] }, usingPrettier: true})).toStrictEqual([]);
+      expect(checkESLINTConfiguration({ configuration: { extends: ['plugin'] }, usingPrettier: true })).toStrictEqual(
+        []
+      );
     });
 
     it('should return an error array if a plugin is present and has a prettier equivalent extended in the wrong order', () => {
@@ -83,7 +85,7 @@ describe('ESLint Prettier Configuration', () => {
         usingPrettier: true
       });
       expect(messages).toHaveLength(1);
-      expect(messages[0]).toHaveProperty('category', MessageCategory.ExtendsArrayOrder)
+      expect(messages[0]).toHaveProperty('category', MessageCategory.ExtendsArrayOrder);
     });
 
     it('should return a Missing Prettier Plugin error if a plugin is present and has a prettier equivalent not extended', () => {
@@ -95,7 +97,7 @@ describe('ESLint Prettier Configuration', () => {
         ESLintPrettierPlugins: ['react']
       });
       expect(messages).toHaveLength(1);
-      expect(messages[0]).toHaveProperty('category', MessageCategory.MissingPrettierPlugin)
+      expect(messages[0]).toHaveProperty('category', MessageCategory.MissingPrettierPlugin);
     });
 
     it('should not return an error if a plugin is present which has no prettier equivalent', () => {
@@ -140,6 +142,84 @@ describe('ESLint Prettier Configuration', () => {
         ESLintPrettierPlugins: ['vue', 'react']
       });
       expect(messages).toHaveLength(0);
+    });
+
+    it('should return an error when using the eslint:recommended plugin and prettier', () => {
+      const messages = checkESLINTConfiguration({
+        configuration: {
+          extends: ['prettier', 'eslint:recommended']
+        },
+        usingPrettier: true,
+        ESLintPrettierPlugins: ['eslint']
+      });
+      expect(messages).toHaveLength(1);
+      expect(messages[0]).toHaveProperty('category', MessageCategory.ExtendsArrayOrder);
+    });
+
+    it('should return an error when using the eslint:recommended plugin without the prettier plugin', () => {
+      const messages = checkESLINTConfiguration({
+        configuration: {
+          extends: ['eslint:recommended']
+        },
+        usingPrettier: true,
+        ESLintPrettierPlugins: ['eslint']
+      });
+      expect(messages).toHaveLength(1);
+      expect(messages[0]).toHaveProperty('category', MessageCategory.MissingPrettierPlugin);
+    });
+  });
+
+  describe('checkEslintConfiguration for rule overrides', () => {
+    it('should return an empty array if no rules have overriden the main prettier plugin', () => {
+      expect(
+        checkESLINTConfiguration({
+          configuration: { extends: ['prettier/react'], rules: { ruleOverrideName: 0 } },
+          usingPrettier: true,
+          ESLintPrettierPlugins: ['react'],
+          ESLintPrettierErrorRules: { react: [] },
+          ESLintPrettierWarningRules: { react: [] }
+        })
+      ).toStrictEqual([]);
+    });
+
+    it('should return an empty array if no prettier plugins are extended with the plugin', () => {
+      expect(
+        checkESLINTConfiguration({
+          configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
+          usingPrettier: true,
+          ESLintPrettierPlugins: ['vue'],
+          ESLintPrettierErrorRules: { react: ['ruleOverrideName'] },
+          ESLintPrettierWarningRules: { react: ['ruleOverrideName'] }
+        })
+      ).toStrictEqual([]);
+    });
+
+    it('should return a override error array if a rule overrides a prettier plugin', () => {
+      const messages = checkESLINTConfiguration({
+        configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
+        usingPrettier: true,
+        ESLintPrettierPlugins: ['vue'],
+        ESLintPrettierErrorRules: { vue: ['ruleOverrideName'] },
+        ESLintPrettierWarningRules: { vue: [] }
+      });
+
+      expect(messages).toHaveLength(1);
+      expect(messages[0]).toHaveProperty('category', MessageCategory.ExtendsArrayRuleOverride);
+      expect(messages[0]).toHaveProperty('type', MessageType.ERROR);
+    });
+
+    it('should return a override warning array if a rule overrides a prettier plugin', () => {
+      const messages = checkESLINTConfiguration({
+        configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
+        usingPrettier: true,
+        ESLintPrettierPlugins: ['vue'],
+        ESLintPrettierErrorRules: { vue: [] },
+        ESLintPrettierWarningRules: { vue: ['ruleOverrideName'] }
+      });
+
+      expect(messages).toHaveLength(1);
+      expect(messages[0]).toHaveProperty('category', MessageCategory.ExtendsArrayRuleOverride);
+      expect(messages[0]).toHaveProperty('type', MessageType.WARN);
     });
   });
 });
