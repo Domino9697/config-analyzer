@@ -1,4 +1,4 @@
-import { FileObject, checkFilePath, mapPath } from '../checkFilePaths';
+import { FileObject, checkFilePath, mapPath } from '../fileParser';
 import { Linter } from 'eslint';
 import { readFileSync, existsSync } from 'fs';
 import path from 'path';

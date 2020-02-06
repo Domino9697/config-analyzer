@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 import { findAndCheckESLintConfig } from './eslintPrettierConfig/ESLintConfigFileParser';
+import { findAndCheckPrettierConfig } from './prettier/prettierConfigFileParser';
 
 function main(): void {
   const args = process.argv.splice(2);
@@ -20,6 +21,8 @@ function main(): void {
   }
 
   findAndCheckESLintConfig(dirPath);
+
+  findAndCheckPrettierConfig(dirPath);
 }
 
 main();
