@@ -1,20 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
-import { checkESLINTConfiguration } from './eslintPrettierConfig';
-
-function findAndCheckESLINTCOnfig(dirPath: string): void {
-  const filePath = path.join(dirPath, '.eslintrc');
-
-  // Find eslintrc file
-  if (!existsSync(filePath)) {
-    console.log('No ESLINT config file found');
-    return;
-  }
-
-  const rawConfig = readFileSync(filePath, 'utf8');
-
-  console.log(checkESLINTConfiguration({ configuration: JSON.parse(rawConfig), usingPrettier: true }));
-}
+import { findAndCheckESLintConfig } from './eslintPrettierConfig/ESLintConfigFileParser';
 
 function main(): void {
   const args = process.argv.splice(2);
@@ -33,7 +19,7 @@ function main(): void {
     process.exit(1);
   }
 
-  findAndCheckESLINTCOnfig(dirPath);
+  findAndCheckESLintConfig(dirPath);
 }
 
 main();
