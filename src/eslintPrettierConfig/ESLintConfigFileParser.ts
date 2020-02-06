@@ -50,6 +50,11 @@ export function findAndCheckESLintConfig(dirPath: string): void {
     return;
   }
 
+  if (ESLintConfigs.length === 0) {
+    console.info('Skipping ESLint config as no config files have been found');
+    return;
+  }
+
   // Get the actual ESLint config
   const { config } = ESLintConfigs[0];
 

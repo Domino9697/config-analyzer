@@ -47,6 +47,11 @@ export function findAndCheckPrettierConfig(dirPath: string): void {
     return;
   }
 
+  if (prettierConfigs.length === 0) {
+    console.info('Skipping Prettier config analyzer because no prettier config found');
+    return;
+  }
+
   // Get the actual ESLint config
   const { config } = prettierConfigs[0];
 
