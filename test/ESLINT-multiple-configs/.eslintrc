@@ -1,0 +1,7 @@
+{
+	"extends": ["eslint/recommended", "prettier", "prettier/react", "react"],
+	"rules": {
+	  "array-bracket-spacing": "error"
+	}
+  }
+  
