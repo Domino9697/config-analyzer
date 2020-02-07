@@ -39,7 +39,7 @@ function findESLintConfigFiles(dirPath: string, possibleESLintFiles: FileObject[
   return ESLintConfigs;
 }
 
-export function findAndCheckESLintConfig(dirPath: string): void {
+export function findAndCheckESLintConfig(dirPath: string, usingPrettier: boolean): Linter.Config | null {
   const ESLintConfigs = findESLintConfigFiles(dirPath, possibleESLintFiles);
 
   if (ESLintConfigs.length > 1) {
@@ -47,16 +47,19 @@ export function findAndCheckESLintConfig(dirPath: string): void {
     ESLintConfigs.forEach(({ fileName }) => {
       console.error(`    ${fileName}`);
     });
-    return;
+    return null;
   }
 
   if (ESLintConfigs.length === 0) {
     console.info('Skipping ESLint config as no config files have been found');
-    return;
+    return null;
   }
 
   // Get the actual ESLint config
   const { config } = ESLintConfigs[0];
 
-  console.log(checkESLINTConfiguration({ configuration: config, usingPrettier: true }));
+  const messages = checkESLINTConfiguration({ configuration: config, usingPrettier });
+  console.log(messages);
+
+  return config;
 }

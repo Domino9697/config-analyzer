@@ -20,9 +20,9 @@ function main(): void {
     process.exit(1);
   }
 
-  findAndCheckESLintConfig(dirPath);
+  const prettierConfig = findAndCheckPrettierConfig(dirPath);
 
-  findAndCheckPrettierConfig(dirPath);
+  findAndCheckESLintConfig(dirPath, Boolean(prettierConfig));
 }
 
 main();
