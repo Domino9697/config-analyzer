@@ -1,7 +1,8 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import path from 'path';
-import { findAndCheckESLintConfig } from './eslintPrettierConfig/ESLintConfigFileParser';
-import { findAndCheckPrettierConfig } from './prettier/prettierConfigFileParser';
+import { checkESLintConfiguration } from './eslintPrettierConfig';
+import { checkPrettierConfiguration } from './prettierConfig';
+import { checkVSCodeConfiguration } from './vscodeConfig';
 
 function main(): void {
   const args = process.argv.splice(2);
@@ -20,9 +21,13 @@ function main(): void {
     process.exit(1);
   }
 
-  const prettierConfig = findAndCheckPrettierConfig(dirPath);
+  const prettierConfig = checkPrettierConfiguration(dirPath);
 
-  findAndCheckESLintConfig(dirPath, Boolean(prettierConfig));
+  const eslintConfig = checkESLintConfiguration(dirPath, Boolean(prettierConfig));
+
+  const VSCodeConfig = checkVSCodeConfiguration(dirPath);
+
+  // console.log(VSCodeConfig);
 }
 
 main();

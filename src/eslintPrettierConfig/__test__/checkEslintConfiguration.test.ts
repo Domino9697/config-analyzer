@@ -1,4 +1,4 @@
-import { applyExtendsArrayOrderRule, checkESLINTConfiguration } from '../checkEslintConfiguration';
+import { applyExtendsArrayOrderRule, checkESLINTConfigurationRules } from '../EslintConfiguration';
 import { extendsObject } from '../types';
 import { MessageCategory, MessageType } from '../../types';
 
@@ -66,19 +66,19 @@ describe('ESLint Prettier Configuration', () => {
     });
   });
 
-  describe('checkEslintConfiguration', () => {
+  describe('checkESLINTConfigurationRules', () => {
     it('should return an empty array if no plugins are present', () => {
-      expect(checkESLINTConfiguration({ configuration: {}, usingPrettier: true })).toStrictEqual([]);
+      expect(checkESLINTConfigurationRules({ configuration: {}, usingPrettier: true })).toStrictEqual([]);
     });
 
     it('should return an empty array if a plugin is present but has no prettier equivalent', () => {
-      expect(checkESLINTConfiguration({ configuration: { extends: ['plugin'] }, usingPrettier: true })).toStrictEqual(
-        []
-      );
+      expect(
+        checkESLINTConfigurationRules({ configuration: { extends: ['plugin'] }, usingPrettier: true })
+      ).toStrictEqual([]);
     });
 
     it('should return an error array if a plugin is present and has a prettier equivalent extended in the wrong order', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['prettier/react', 'react']
         },
@@ -89,7 +89,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should return a Missing Prettier Plugin error if a plugin is present and has a prettier equivalent not extended', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['react']
         },
@@ -101,7 +101,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should not return an error if a plugin is present which has no prettier equivalent', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['react']
         },
@@ -112,7 +112,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should not return an error if two plugins are present with their prettier counterparts intertwined', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['react', 'prettier/react', 'vue', 'prettier/vue']
         },
@@ -123,7 +123,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should not return an error if two plugins are present with their prettier counterparts', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['react', 'vue', 'prettier/vue', 'prettier/react']
         },
@@ -134,7 +134,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should not return an error usingPrettier is set to false', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['react', 'vue']
         },
@@ -145,7 +145,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should return an error when using the eslint:recommended plugin and prettier', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['prettier', 'eslint:recommended']
         },
@@ -157,7 +157,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should return an error when using the eslint:recommended plugin without the prettier plugin', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: {
           extends: ['eslint:recommended']
         },
@@ -169,10 +169,10 @@ describe('ESLint Prettier Configuration', () => {
     });
   });
 
-  describe('checkEslintConfiguration for rule overrides', () => {
+  describe('checkESLINTConfigurationRules for rule overrides', () => {
     it('should return an empty array if no rules have overriden the main prettier plugin', () => {
       expect(
-        checkESLINTConfiguration({
+        checkESLINTConfigurationRules({
           configuration: { extends: ['prettier/react'], rules: { ruleOverrideName: 0 } },
           usingPrettier: true,
           ESLintPrettierPlugins: ['react'],
@@ -184,7 +184,7 @@ describe('ESLint Prettier Configuration', () => {
 
     it('should return an empty array if no prettier plugins are extended with the plugin', () => {
       expect(
-        checkESLINTConfiguration({
+        checkESLINTConfigurationRules({
           configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
           usingPrettier: true,
           ESLintPrettierPlugins: ['vue'],
@@ -195,7 +195,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should return a override error array if a rule overrides a prettier plugin', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
         usingPrettier: true,
         ESLintPrettierPlugins: ['vue'],
@@ -209,7 +209,7 @@ describe('ESLint Prettier Configuration', () => {
     });
 
     it('should return a override warning array if a rule overrides a prettier plugin', () => {
-      const messages = checkESLINTConfiguration({
+      const messages = checkESLINTConfigurationRules({
         configuration: { extends: ['vue', 'prettier/vue', 'react'], rules: { ruleOverrideName: 0 } },
         usingPrettier: true,
         ESLintPrettierPlugins: ['vue'],

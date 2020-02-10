@@ -1,0 +1,1 @@
+export { checkPrettierConfiguration } from './prettierConfiguration';

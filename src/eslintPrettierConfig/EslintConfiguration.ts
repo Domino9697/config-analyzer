@@ -3,6 +3,8 @@ import { mapExtendsArray } from './helpers';
 import { Linter } from 'eslint';
 import { extendsObject, rulesObject } from './types';
 import * as EslintPrettierRules from './ESLintPrettierRules';
+import { ConfigFileObject, ConfigContainer } from '../parser';
+import { findESLintConfigurationFiles } from './ESLintConfigFileParser';
 
 /**
  * Check if Prettier plugins are available and not installed and if they are extended in the right order
@@ -69,14 +71,14 @@ export function applyNoFormattingOverrideRule(
 }
 
 interface checkESLINTConfigurationParams {
-  configuration: Linter.Config,
-  usingPrettier: boolean,
+  configuration: Linter.Config;
+  usingPrettier: boolean;
   ESLintPrettierPlugins?: string[];
   ESLintPrettierWarningRules?: rulesObject;
   ESLintPrettierErrorRules?: rulesObject;
 }
 
-export function checkESLINTConfiguration({
+export function checkESLINTConfigurationRules({
   configuration,
   usingPrettier,
   ESLintPrettierErrorRules = EslintPrettierRules.ESLintPrettierErrorRules,
@@ -108,4 +110,44 @@ export function checkESLINTConfiguration({
   );
 
   return messages;
+}
+
+export function checkESLintConfigurationUnicity(configurationFiles: ConfigContainer<Linter.Config>[]): boolean {
+  if (configurationFiles.length > 1) {
+    // Log that there is an issue
+    console.error(`ERROR: ${configurationFiles.length} multiple ESLINT configurations detected in files:`);
+    configurationFiles.forEach(({ fileName }) => {
+      console.error(`    ${fileName}`);
+    });
+    return false;
+  }
+  return true;
+}
+
+export function checkESLintConfigurationExistence(configurationFiles: ConfigContainer<Linter.Config>[]): boolean {
+  if (configurationFiles.length === 0) {
+    console.info('Skipping ESLint config as no config files have been found');
+    return false;
+  }
+  return true;
+}
+
+export function checkESLintConfiguration(dirPath: string, usingPrettier: boolean): null | Linter.Config {
+  const ESLintConfigs = findESLintConfigurationFiles(dirPath);
+
+  if (!checkESLintConfigurationExistence(ESLintConfigs)) {
+    return null;
+  }
+
+  if (!checkESLintConfigurationUnicity(ESLintConfigs)) {
+    return null;
+  }
+
+  // Get the actual ESLint config
+  const { config } = ESLintConfigs[0];
+
+  const messages = checkESLINTConfigurationRules({ configuration: config, usingPrettier });
+  console.log(messages);
+
+  return config;
 }

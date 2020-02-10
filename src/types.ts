@@ -7,7 +7,8 @@ export enum MessageType {
 export enum MessageCategory {
   ExtendsArrayOrder = 'extendsArrayOrder',
   ExtendsArrayRuleOverride = 'extendsArrayRuleOverride',
-  MissingPrettierPlugin = 'missingPrettierPlugin'
+  MissingPrettierPlugin = 'missingPrettierPlugin',
+  MultipleConfigurations = 'multipleConfigurations'
 }
 
 export interface Message {

@@ -1,4 +1,5 @@
 import { Linter } from 'eslint';
+import { ConfigContainer } from '../parser';
 
 interface PluginData {
   position: number;
@@ -11,7 +12,4 @@ export type extendsObject = { [index: string]: PluginData };
 
 export type rulesObject = { [index: string]: string[] | undefined };
 
-export interface ESLintConfigContainer {
-  config: Linter.Config;
-  fileName: string;
-}
+export type ESLintConfigContainer = ConfigContainer<Linter.Config>;

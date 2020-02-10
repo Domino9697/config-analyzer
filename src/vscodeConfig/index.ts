@@ -1,0 +1,1 @@
+export { checkVSCodeConfiguration } from './vscodeConfiguration';

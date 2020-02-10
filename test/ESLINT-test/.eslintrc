@@ -1,3 +1,8 @@
 {
-  "extends": ["eslint/recommended"]
+  "extends": [
+    "eslint/recommended",
+    "@typescript-eslint/recommended",
+    "@typescript-eslint/hello",
+    "prettier/@typescript-eslint"
+  ]
 }

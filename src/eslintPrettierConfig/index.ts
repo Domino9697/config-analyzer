@@ -1,1 +1,1 @@
-export { checkESLINTConfiguration } from './checkEslintConfiguration';
+export { checkESLintConfiguration } from './EslintConfiguration';
