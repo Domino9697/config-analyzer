@@ -100,9 +100,9 @@ describe('ESLint Prettier Configuration', () => {
       const extendsArray = ['@typescript-eslint/recommended', '@typescript-eslint/typings'];
       expect(mapExtendsArray(extendsArray)).toStrictEqual({
         '@typescript-eslint': {
-          pluginName: '@typescript-eslint/recommended',
+          pluginName: '@typescript-eslint/typings',
           prettierPluginName: '',
-          position: 0,
+          position: 1,
           prettierPosition: -1
         }
       });

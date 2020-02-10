@@ -1,7 +1,7 @@
 import { extendsObject } from './types';
 
 export function parseRawExtendElement(rawPlugin: string): string {
-  return rawPlugin.replace(/plugin:|:recommended/, '').replace(/^((?!prettier\/).)(.*)\/*$/, '$0');
+  return rawPlugin.replace(/plugin:|:recommended/, '').replace(/^(?!prettier\/)(.*)\/(.*)/, '$1');
 }
 
 /**
