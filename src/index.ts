@@ -3,6 +3,10 @@ import path from 'path';
 import { checkESLintConfiguration } from './eslintPrettierConfig';
 import { checkPrettierConfiguration } from './prettierConfig';
 import { checkVSCodeConfiguration } from './vscodeConfig';
+import { applyVSCodeESLintConfigurationRules } from './vscodeRules';
+import { Message } from './types';
+
+import { messageController } from "./messages";
 
 function main(): void {
   const args = process.argv.splice(2);
@@ -21,13 +25,18 @@ function main(): void {
     process.exit(1);
   }
 
-  const prettierConfig = checkPrettierConfiguration(dirPath);
+  const prettierConfig = checkPrettierConfiguration(dirPath, messageController);
 
-  const eslintConfig = checkESLintConfiguration(dirPath, Boolean(prettierConfig));
+  const eslintConfig = checkESLintConfiguration(dirPath, Boolean(prettierConfig), messageController);
 
-  const VSCodeConfig = checkVSCodeConfiguration(dirPath);
+  const VSCodeConfig = checkVSCodeConfiguration(dirPath, messageController);
 
-  // console.log(VSCodeConfig);
+  if (VSCodeConfig && eslintConfig) {
+    const VSCodeMessages = applyVSCodeESLintConfigurationRules(VSCodeConfig, eslintConfig);
+    messageController.addMessage('ESLINT_VSCode', VSCodeMessages)
+  }
+
+  messageController.printMessages();
 }
 
 main();

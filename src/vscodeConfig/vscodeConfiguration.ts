@@ -1,5 +1,7 @@
 import { VSCodeConfigs, VSCodeConfig } from './types';
 import { findVSCodeConfigFiles } from './vscodeConfigFileParser';
+import { MessageController } from '../messages';
+import { MessageCategory, MessageType } from '../types';
 
 export function checkVSCodeConfigurationExistence(configurationFiles: VSCodeConfigs): boolean {
   if (configurationFiles.global.length === 0 && configurationFiles.local.length === 0) {
@@ -15,13 +17,12 @@ export function checkVSCodeConfigurationExistence(configurationFiles: VSCodeConf
 
 export function checkVSCodeConfigurationUnicity(configurationFiles: VSCodeConfigs): boolean {
   if (configurationFiles.local.length > 1) {
-    console.error('Multiple VSCode settings found');
     return false;
   }
   return true;
 }
 
-export function checkVSCodeConfiguration(dirPath: string): null | VSCodeConfig {
+export function checkVSCodeConfiguration(dirPath: string, messageController: MessageController): null | VSCodeConfig {
   const VSCodeConfigFiles = findVSCodeConfigFiles(dirPath);
 
   if (!checkVSCodeConfigurationExistence) {
@@ -29,6 +30,13 @@ export function checkVSCodeConfiguration(dirPath: string): null | VSCodeConfig {
   }
 
   if (!checkVSCodeConfigurationUnicity) {
+    messageController.addMessage('VSCode', {
+      category: MessageCategory.MultipleConfigurations,
+      type: MessageType.ERROR,
+      message: `ERROR: ${VSCodeConfigFiles.local.length} multiple VSCode configurations detected in files:
+          ${VSCodeConfigFiles.local.map(({ fileName }) => fileName)}
+      `
+    });
     return null;
   }
 

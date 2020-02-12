@@ -5,6 +5,7 @@ import { extendsObject, rulesObject } from './types';
 import * as EslintPrettierRules from './ESLintPrettierRules';
 import { ConfigFileObject, ConfigContainer } from '../parser';
 import { findESLintConfigurationFiles } from './ESLintConfigFileParser';
+import { MessageController } from '../messages';
 
 /**
  * Check if Prettier plugins are available and not installed and if they are extended in the right order
@@ -114,11 +115,6 @@ export function checkESLINTConfigurationRules({
 
 export function checkESLintConfigurationUnicity(configurationFiles: ConfigContainer<Linter.Config>[]): boolean {
   if (configurationFiles.length > 1) {
-    // Log that there is an issue
-    console.error(`ERROR: ${configurationFiles.length} multiple ESLINT configurations detected in files:`);
-    configurationFiles.forEach(({ fileName }) => {
-      console.error(`    ${fileName}`);
-    });
     return false;
   }
   return true;
@@ -126,20 +122,31 @@ export function checkESLintConfigurationUnicity(configurationFiles: ConfigContai
 
 export function checkESLintConfigurationExistence(configurationFiles: ConfigContainer<Linter.Config>[]): boolean {
   if (configurationFiles.length === 0) {
-    console.info('Skipping ESLint config as no config files have been found');
     return false;
   }
   return true;
 }
 
-export function checkESLintConfiguration(dirPath: string, usingPrettier: boolean): null | Linter.Config {
+export function checkESLintConfiguration(dirPath: string, usingPrettier: boolean, messageController: MessageController): null | Linter.Config {
   const ESLintConfigs = findESLintConfigurationFiles(dirPath);
 
   if (!checkESLintConfigurationExistence(ESLintConfigs)) {
+    messageController.addMessage('ESLint', {
+      category: MessageCategory.UnusedTool,
+      type: MessageType.INFO,
+      message: `Skipping ESLint config as no config files have been found`
+    });
     return null;
   }
 
   if (!checkESLintConfigurationUnicity(ESLintConfigs)) {
+    messageController.addMessage('ESLint', {
+      category: MessageCategory.MultipleConfigurations,
+      type: MessageType.ERROR,
+      message: `ERROR: ${ESLintConfigs.length} multiple ESLint configurations detected in files:
+          ${ESLintConfigs.map(({ fileName }) => fileName)}
+      `
+    });
     return null;
   }
 
@@ -147,7 +154,7 @@ export function checkESLintConfiguration(dirPath: string, usingPrettier: boolean
   const { config } = ESLintConfigs[0];
 
   const messages = checkESLINTConfigurationRules({ configuration: config, usingPrettier });
-  console.log(messages);
+  messageController.addMessage('ESLint', messages)
 
   return config;
 }

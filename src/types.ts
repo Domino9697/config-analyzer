@@ -8,7 +8,11 @@ export enum MessageCategory {
   ExtendsArrayOrder = 'extendsArrayOrder',
   ExtendsArrayRuleOverride = 'extendsArrayRuleOverride',
   MissingPrettierPlugin = 'missingPrettierPlugin',
-  MultipleConfigurations = 'multipleConfigurations'
+  MultipleConfigurations = 'multipleConfigurations',
+  NoLocalESLintIDESaveConfig = 'noLocalESLintIDESaveConfig',
+  IDEInfo = 'IDEInfo',
+  ESLintDisbaledInIDE = 'eslintDisbaledIDE',
+  UnusedTool = 'UnusedTool'
 }
 
 export interface Message {
