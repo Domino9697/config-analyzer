@@ -107,5 +107,17 @@ describe('ESLint Prettier Configuration', () => {
         }
       });
     });
+
+    it('should return an object with a react element when react-app is the rawElement', () => {
+      const extendsArray = ['react-app'];
+      expect(mapExtendsArray(extendsArray)).toStrictEqual({
+        'react': {
+          pluginName: 'react-app',
+          prettierPluginName: '',
+          position: 0,
+          prettierPosition: -1
+        }
+      });
+    });
   });
 });
