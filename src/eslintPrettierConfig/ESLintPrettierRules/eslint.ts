@@ -1,4 +1,4 @@
-import { rulesObject } from "../types";
+import { rulesObject } from '../types';
 
 export const ESLintPrettierWarningRules: rulesObject = {
   eslint: [
@@ -12,7 +12,13 @@ export const ESLintPrettierWarningRules: rulesObject = {
     'no-unexpected-multiline',
     'prefer-arrow-callback',
     'quotes'
-  ]
+  ],
+  react: [],
+  vue: [],
+  standard: [],
+  flowtype: [],
+  babel: [],
+  "@typescript-eslint": []
 };
 
 export const ESLintPrettierErrorRules: rulesObject = {
@@ -88,5 +94,82 @@ export const ESLintPrettierErrorRules: rulesObject = {
     'wrap-iife',
     'wrap-regex',
     'yield-star-spacing'
+  ],
+  react: [
+    'react/jsx-child-element-spacing',
+    'react/jsx-closing-brack',
+    'react/jsx-closing-tag-location',
+    'react/jsx-curly-newline',
+    'react/jsx-curly-spacing',
+    'react/jsx-equals-spacing',
+    'react/jsx-first-prop-new-line',
+    'react/jsx-indent',
+    'react/jsx-indent-props',
+    'react/jsx-max-props-per-line',
+    'react/jsx-one-expression-per-line',
+    'react/jsx-props-no-multi-spaces',
+    'react/jsx-tag-spacing',
+    'react/jsx-wrap-multilines'
+  ],
+  vue: [
+    "vue/html-self-closing",
+    "vue/max-len",
+    "vue/array-bracket-spacing",
+    "vue/arrow-spacing",
+    "vue/block-spacing",
+    "vue/brace-style",
+    "vue/comma-dangle",
+    "vue/dot-location",
+    "vue/html-closing-bracket-newline",
+    "vue/html-closing-bracket-spacing",
+    "vue/html-end-tags",
+    "vue/html-indent",
+    "vue/html-quotes",
+    "vue/key-spacing",
+    "vue/keyword-spacing",
+    "vue/max-attributes-per-line",
+    "vue/multiline-html-element-content-newline",
+    "vue/mustache-interpolation-spacing",
+    "vue/no-multi-spaces",
+    "vue/no-spaces-around-equal-signs-in-attribute",
+    "vue/object-curly-spacing",
+    "vue/script-indent",
+    "vue/singleline-html-element-content-newline",
+    "vue/space-infix-ops",
+    "vue/space-unary-ops"
+  ],
+  standard: [
+    "standard/array-bracket-even-spacing",
+    "standard/computed-property-even-spacing",
+    "standard/object-curly-even-spacing"
+  ],
+  flowtype: [
+    "flowtype/boolean-style",
+    "flowtype/delimiter-dangle",
+    "flowtype/generic-spacing",
+    "flowtype/object-type-delimiter",
+    "flowtype/semi",
+    "flowtype/space-after-type-colon",
+    "flowtype/space-before-generic-bracket",
+    "flowtype/space-before-type-colon",
+    "flowtype/union-intersection-spacing"
+  ],
+  babel: [
+    "babel/quotes",
+    "babel/object-curly-spacing",
+    "babel/semi"
+  ],
+  "@typescript-eslint": [
+    "@typescript-eslint/quotes",
+    "@typescript-eslint/brace-style",
+    "@typescript-eslint/comma-spacing",
+    "@typescript-eslint/func-call-spacing",
+    "@typescript-eslint/indent",
+    "@typescript-eslint/member-delimiter-style",
+    "@typescript-eslint/no-extra-parens",
+    "@typescript-eslint/no-extra-semi",
+    "@typescript-eslint/semi",
+    "@typescript-eslint/space-before-function-paren",
+    "@typescript-eslint/type-annotation-spacing"
   ]
 };
