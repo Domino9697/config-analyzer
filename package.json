@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "rm -r build/ && tsc"
+    "build": "tsc"
   },
   "author": "Francois Hendriks",
   "license": "ISC",
