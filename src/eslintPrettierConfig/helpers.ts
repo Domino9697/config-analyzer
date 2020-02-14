@@ -1,7 +1,11 @@
 import { extendsObject } from './types';
 
 export function parseRawExtendElement(rawPlugin: string): string {
-  return rawPlugin.replace(/plugin:|:recommended/, '').replace(/^(?!prettier\/)(.*)\/(.*)/, '$1');
+  return rawPlugin
+    .replace(/plugin:/, '')
+    .replace(/:recommended/, '')
+    .replace(/\/recommended/, '')
+    .replace(/^(?!prettier\/)(.*)\/(.*)/, '$1');
 }
 
 /**
@@ -14,7 +18,7 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
 
     // If the plugin is create-react-app, change it to react
     if (element === 'react-app') {
-      element = 'react'
+      element = 'react';
     }
 
     // If the plugin is simply Prettier, then it overrides the eslint Extend element

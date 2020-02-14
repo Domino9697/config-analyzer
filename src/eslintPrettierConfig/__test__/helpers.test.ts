@@ -96,6 +96,18 @@ describe('ESLint Prettier Configuration', () => {
       });
     });
 
+    it('should return an object with eslint as the key when plugin:prettier/recommended is the prettier plugin', () => {
+      const extendsArray = ['eslint:recommended', 'plugin:prettier/recommended'];
+      expect(mapExtendsArray(extendsArray)).toStrictEqual({
+        eslint: {
+          pluginName: 'eslint:recommended',
+          prettierPluginName: 'plugin:prettier/recommended',
+          position: 0,
+          prettierPosition: 1
+        }
+      });
+    });
+
     it('should return an object with eslint as the key when prettier is the prettier plugin', () => {
       const extendsArray = ['@typescript-eslint/recommended', '@typescript-eslint/typings'];
       expect(mapExtendsArray(extendsArray)).toStrictEqual({

@@ -3,7 +3,7 @@ import { mapExtendsArray } from './helpers';
 import { Linter } from 'eslint';
 import { extendsObject, rulesObject } from './types';
 import * as EslintPrettierRules from './ESLintPrettierRules';
-import { ConfigFileObject, ConfigContainer } from '../parser';
+import { ConfigContainer } from '../parser';
 import { findESLintConfigurationFiles } from './ESLintConfigFileParser';
 import { MessageController } from '../messages';
 
