@@ -12,6 +12,11 @@ export function mapExtendsArray(extendsArray: string[]): extendsObject {
     let element = parseRawExtendElement(rawElement);
     const isPrettierPlugin = element.includes('prettier');
 
+    // If the plugin is create-react-app, change it to react
+    if (element === 'react-app') {
+      element = 'react'
+    }
+
     // If the plugin is simply Prettier, then it overrides the eslint Extend element
     if (element === 'prettier') {
       element = 'eslint';
