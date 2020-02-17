@@ -3,6 +3,7 @@ import { ConfigFileObject, parseConfigFiles } from '../parser';
 
 const possibleESLintFiles: ConfigFileObject[] = [
   { name: '.eslintrc', extension: null },
+  { name: '.eslintrc.js', extension: 'js' },
   { name: '.eslintrc.json', extension: 'json' },
   { name: '.eslintrc.yaml', extension: 'yaml' },
   { name: 'package.json', extension: 'json', attribute: 'eslintConfig' }
