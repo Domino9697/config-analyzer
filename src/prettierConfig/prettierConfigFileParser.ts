@@ -3,6 +3,7 @@ import { Options } from 'prettier';
 
 const possiblePrettierFiles: ConfigFileObject[] = [
   { name: '.prettierrc', extension: null },
+  { name: '.prettierrc.js', extension: 'js' },
   { name: '.prettierrc.json', extension: 'json' },
   { name: '.prettierrc.yaml', extension: 'yaml' },
   { name: 'package.json', extension: 'json', attribute: 'prettier' }

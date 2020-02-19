@@ -17,11 +17,12 @@ function main(): void {
   }
 
   const currentDir = process.cwd();
+  const inputPath = args[0];
 
-  const dirPath = path.join(currentDir, args[0]);
+  const dirPath = existsSync(inputPath) ? inputPath : path.join(currentDir, inputPath);
 
   if (!existsSync(dirPath)) {
-    console.log(`Directory ${dirPath} does not exist`);
+    console.log(`Neither ${inputPath} or ${dirPath} directories exist`);
     process.exit(1);
   }
 
